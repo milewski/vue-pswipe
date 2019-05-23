@@ -23,5 +23,5 @@ const install: PluginFunction<Options> = (Vue, options?: Options) => {
 }
 
 export default {
-    install,
+    install, Photoswipe
 }
