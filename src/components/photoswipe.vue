@@ -61,7 +61,6 @@
         @Prop({ type: Function, default: () => true }) filter!: Filter
 
         created() {
-            console.log('hello world')
             const pswp = new Vue(Pswp).$mount()
             this.pswpElement = appendOnce(pswp.$el)
         }
