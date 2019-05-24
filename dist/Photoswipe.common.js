@@ -5498,216 +5498,12 @@ if (typeof window !== 'undefined') {
 // Indicate to webpack that this file can be concatenated
 /* harmony default export */ var setPublicPath = (null);
 
-// CONCATENATED MODULE: ./src/utils.ts
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-var isMobile = function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-};
-var isNum = function isNum(value) {
-  return typeof value === 'number';
-};
-var isStr = function isStr(value) {
-  return typeof value === 'string';
-};
-var isObj = function isObj(value) {
-  return Object.prototype.toString.call(value) === '[object Object]';
-};
-
-var isDef = function isDef(value) {
-  return value !== undefined && value !== null;
-};
-
-var isImg = function isImg(el) {
-  return el.tagName === 'IMG';
-};
-
-var isEle = function isEle(node) {
-  return node.nodeType === 1;
-};
-
-var isBgImg = function isBgImg(el) {
-  return !isImg(el) && !!el.dataset.pswpSrc;
-};
-var errorHandler = function errorHandler(hint) {
-  throw new Error("[vue-pswipe] ".concat(hint));
-};
-var getImageSize = function getImageSize(path) {
-  return new Promise(function (resolve) {
-    var img = new Image();
-    var timer;
-    img.src = path;
-    img.addEventListener('error', function () {
-      clearTimeout(timer);
-    });
-
-    var check = function check() {
-      if (img.width > 0 || img.height > 0) {
-        return resolve({
-          src: path,
-          w: img.width,
-          h: img.height
-        });
-      }
-
-      timer = window.setTimeout(check, 40);
-    };
-
-    check();
-  });
-};
-var findIndex = function findIndex(array, fn) {
-  var index = -1;
-  array.some(function (item, idx) {
-    var result = fn(item, idx);
-    if (result) index = idx;
-    return result;
-  });
-  return index;
-};
-/**
- * parse picture index and gallery index from URL (#&pid=1&gid=2)
- */
-
-var parseHash = function parseHash() {
-  var hash = window.location.hash.substring(1);
-  var params = {};
-  if (hash.length < 5) return params;
-  hash.split('&').reduce(function (acc, cur) {
-    if (!cur) return acc;
-    var pair = cur.split('=');
-    if (pair.length < 2) return acc;
-
-    var _pair = _slicedToArray(pair, 2),
-        key = _pair[0],
-        value = _pair[1];
-
-    acc[key] = +value;
-    return acc;
-  }, params);
-  return params;
-};
-var querySelectorList = function querySelectorList(selector) {
-  var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
-  return _toConsumableArray(context.querySelectorAll(selector));
-};
-/**
- * find nearest parent element
- */
-
-var closest = function closest(el, fn) {
-  return !!el && isEle(el) && (fn(el) ? el : closest(el.parentNode, fn));
-};
-var get = function get(context, path, defaultValue) {
-  try {
-    var result = path.split('.').reduce(function (acc, cur) {
-      return acc[cur];
-    }, context);
-    return isDef(result) ? result : defaultValue;
-  } catch (err) {
-    return defaultValue;
-  }
-};
-var single = function single(fn) {
-  var result;
-  return function () {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return result || (result = fn.apply(this, args)); // eslint-disable-line
-  };
-};
-
-var append = function append(el) {
-  return document.body.appendChild(el);
-};
-
-var appendOnce = single(append);
-var setSize = function setSize(el, _ref) {
-  var w = _ref.w,
-      h = _ref.h;
-  return el.dataset.pswpSize = "".concat(w, "x").concat(h);
-}; // eslint-disable-line
-
-var getSrc = function getSrc(target, auto) {
-  return auto && isImg(target) ? target.src : target.dataset.pswpSrc || '';
-}; // prevent uncessary click event be handle
-
-var relevant = function relevant(el, auto, filter) {
-  return auto ? isImg(el) && filter(el) : !!el.dataset.pswpSrc;
-};
-
-var upperFirst = function upperFirst(str) {
-  return str.replace(/^\S/, function (match) {
-    return match.toUpperCase();
-  });
-};
-
-var getPswpDataKey = function getPswpDataKey(property) {
-  return "pswp".concat(upperFirst(property));
-};
-
-var setPswpData = function setPswpData(options, el) {
-  Object.keys(options).forEach(function (key) {
-    el.dataset[getPswpDataKey(key)] = options[key]; // eslint-disable-line
-  });
-};
-var setPswpDataByCond = function setPswpDataByCond(el, value) {
-  if (isStr(value)) setPswpData({
-    src: value
-  }, el);
-  if (isObj(value)) setPswpData(value, el);
-};
-var jsonEqual = function jsonEqual(val1, val2) {
-  return JSON.stringify(val1) === JSON.stringify(val2);
-};
-// CONCATENATED MODULE: ./src/config.ts
-
-var defualtGlobalOption = {
-  // in spa no need history mode
-  history: false,
-  shareEl: !isMobile(),
-  shareButtons: [{
-    id: 'download',
-    label: 'Download image',
-    url: '{{raw_image_url}}',
-    download: true
-  }]
-};
-var config_getGlobalMixin = function getGlobalMixin(pswp, options) {
-  return {
-    data: function data() {
-      return {
-        globalOptions: options
-      };
-    },
-    created: function created() {
-      // @ts-ignore
-      this.pswpElement = appendOnce(pswp.$el);
-    }
-  };
-};
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"584e3ad4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/photoswipe.vue?vue&type=template&id=11b63928&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"584e3ad4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/photoswipe.vue?vue&type=template&id=6be040f6&
 var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"gallery",staticClass:"pswipe-gallery",on:{"click":_vm.onThumbClick}},[_vm._t("default")],2)}
 var staticRenderFns = []
 
 
-// CONCATENATED MODULE: ./src/components/photoswipe.vue?vue&type=template&id=11b63928&
+// CONCATENATED MODULE: ./src/components/photoswipe.vue?vue&type=template&id=6be040f6&
 
 // CONCATENATED MODULE: ./node_modules/tslib/tslib.es6.js
 /*! *****************************************************************************
@@ -6041,14 +5837,17 @@ var photoswipe_default = /*#__PURE__*/__webpack_require__.n(photoswipe);
 var photoswipe_ui_default = __webpack_require__("14fd");
 var photoswipe_ui_default_default = /*#__PURE__*/__webpack_require__.n(photoswipe_ui_default);
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--13-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/photoswipe.vue?vue&type=script&lang=ts&
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"584e3ad4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/pswp.vue?vue&type=template&id=76958fa8&
+var pswpvue_type_template_id_76958fa8_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _vm._m(0)}
+var pswpvue_type_template_id_76958fa8_staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"pswp",attrs:{"tabindex":"-1","role":"dialog","aria-hidden":"true"}},[_c('div',{staticClass:"pswp__bg"}),_c('div',{staticClass:"pswp__scroll-wrap"},[_c('div',{staticClass:"pswp__container"},[_c('div',{staticClass:"pswp__item"}),_c('div',{staticClass:"pswp__item"}),_c('div',{staticClass:"pswp__item"})]),_c('div',{staticClass:"pswp__ui pswp__ui--hidden"},[_c('div',{staticClass:"pswp__top-bar"},[_c('div',{staticClass:"pswp__counter"}),_c('button',{staticClass:"pswp__button pswp__button--close",attrs:{"title":"Close (Esc)"}}),_c('button',{staticClass:"pswp__button pswp__button--share",attrs:{"title":"Share"}}),_c('button',{staticClass:"pswp__button pswp__button--fs",attrs:{"title":"Toggle fullscreen"}}),_c('button',{staticClass:"pswp__button pswp__button--zoom",attrs:{"title":"Zoom in/out"}}),_c('div',{staticClass:"pswp__preloader"},[_c('div',{staticClass:"pswp__preloader__icn"},[_c('div',{staticClass:"pswp__preloader__cut"},[_c('div',{staticClass:"pswp__preloader__donut"})])])])]),_c('div',{staticClass:"pswp__share-modal pswp__share-modal--hidden pswp__single-tap"},[_c('div',{staticClass:"pswp__share-tooltip"})]),_c('button',{staticClass:"pswp__button pswp__button--arrow--left",attrs:{"title":"Previous (arrow left)"}}),_c('button',{staticClass:"pswp__button pswp__button--arrow--right",attrs:{"title":"Next (arrow right)"}}),_c('div',{staticClass:"pswp__caption"},[_c('div',{staticClass:"pswp__caption__center"})])])])])}]
+
+
+// CONCATENATED MODULE: ./src/components/pswp.vue?vue&type=template&id=76958fa8&
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--13-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/pswp.vue?vue&type=script&lang=ts&
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
@@ -6063,6 +5862,368 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+var Pswp =
+/*#__PURE__*/
+function (_Vue) {
+  _inherits(Pswp, _Vue);
+
+  function Pswp() {
+    _classCallCheck(this, Pswp);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Pswp).apply(this, arguments));
+  }
+
+  return Pswp;
+}(external_commonjs_vue_commonjs2_vue_root_Vue_default.a);
+
+Pswp = __decorate([vue_class_component_common_default()({
+  name: 'Pswp'
+})], Pswp);
+/* harmony default export */ var pswpvue_type_script_lang_ts_ = (Pswp);
+// CONCATENATED MODULE: ./src/components/pswp.vue?vue&type=script&lang=ts&
+ /* harmony default export */ var components_pswpvue_type_script_lang_ts_ = (pswpvue_type_script_lang_ts_); 
+// CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+function normalizeComponent (
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier, /* server only */
+  shadowMode /* vue-cli only */
+) {
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
+  }
+}
+
+// CONCATENATED MODULE: ./src/components/pswp.vue
+
+
+
+
+
+/* normalize component */
+
+var component = normalizeComponent(
+  components_pswpvue_type_script_lang_ts_,
+  pswpvue_type_template_id_76958fa8_render,
+  pswpvue_type_template_id_76958fa8_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var components_pswp = (component.exports);
+// CONCATENATED MODULE: ./src/utils.ts
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var isMobile = function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+};
+var isNum = function isNum(value) {
+  return typeof value === 'number';
+};
+var isStr = function isStr(value) {
+  return typeof value === 'string';
+};
+var isObj = function isObj(value) {
+  return Object.prototype.toString.call(value) === '[object Object]';
+};
+
+var isDef = function isDef(value) {
+  return value !== undefined && value !== null;
+};
+
+var isImg = function isImg(el) {
+  return el.tagName === 'IMG';
+};
+
+var isEle = function isEle(node) {
+  return node.nodeType === 1;
+};
+
+var isBgImg = function isBgImg(el) {
+  return !isImg(el) && !!el.dataset.pswpSrc;
+};
+var errorHandler = function errorHandler(hint) {
+  throw new Error("[vue-pswipe] ".concat(hint));
+};
+var getImageSize = function getImageSize(path) {
+  return new Promise(function (resolve) {
+    var img = new Image();
+    var timer;
+    img.src = path;
+    img.addEventListener('error', function () {
+      clearTimeout(timer);
+    });
+
+    var check = function check() {
+      if (img.width > 0 || img.height > 0) {
+        return resolve({
+          src: path,
+          w: img.width,
+          h: img.height
+        });
+      }
+
+      timer = window.setTimeout(check, 40);
+    };
+
+    check();
+  });
+};
+var findIndex = function findIndex(array, fn) {
+  var index = -1;
+  array.some(function (item, idx) {
+    var result = fn(item, idx);
+    if (result) index = idx;
+    return result;
+  });
+  return index;
+};
+/**
+ * parse picture index and gallery index from URL (#&pid=1&gid=2)
+ */
+
+var parseHash = function parseHash() {
+  var hash = window.location.hash.substring(1);
+  var params = {};
+  if (hash.length < 5) return params;
+  hash.split('&').reduce(function (acc, cur) {
+    if (!cur) return acc;
+    var pair = cur.split('=');
+    if (pair.length < 2) return acc;
+
+    var _pair = _slicedToArray(pair, 2),
+        key = _pair[0],
+        value = _pair[1];
+
+    acc[key] = +value;
+    return acc;
+  }, params);
+  return params;
+};
+var querySelectorList = function querySelectorList(selector) {
+  var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+  return _toConsumableArray(context.querySelectorAll(selector));
+};
+/**
+ * find nearest parent element
+ */
+
+var closest = function closest(el, fn) {
+  return !!el && isEle(el) && (fn(el) ? el : closest(el.parentNode, fn));
+};
+var get = function get(context, path, defaultValue) {
+  try {
+    var result = path.split('.').reduce(function (acc, cur) {
+      return acc[cur];
+    }, context);
+    return isDef(result) ? result : defaultValue;
+  } catch (err) {
+    return defaultValue;
+  }
+};
+var single = function single(fn) {
+  var result;
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return result || (result = fn.apply(this, args)); // eslint-disable-line
+  };
+};
+
+var append = function append(el) {
+  return document.body.appendChild(el);
+};
+
+var appendOnce = single(append);
+var setSize = function setSize(el, _ref) {
+  var w = _ref.w,
+      h = _ref.h;
+  return el.dataset.pswpSize = "".concat(w, "x").concat(h);
+}; // eslint-disable-line
+
+var getSrc = function getSrc(target, auto) {
+  return auto && isImg(target) ? target.src : target.dataset.pswpSrc || '';
+}; // prevent uncessary click event be handle
+
+var relevant = function relevant(el, auto, filter) {
+  return auto ? isImg(el) && filter(el) : !!el.dataset.pswpSrc;
+};
+
+var upperFirst = function upperFirst(str) {
+  return str.replace(/^\S/, function (match) {
+    return match.toUpperCase();
+  });
+};
+
+var getPswpDataKey = function getPswpDataKey(property) {
+  return "pswp".concat(upperFirst(property));
+};
+
+var setPswpData = function setPswpData(options, el) {
+  Object.keys(options).forEach(function (key) {
+    el.dataset[getPswpDataKey(key)] = options[key]; // eslint-disable-line
+  });
+};
+var setPswpDataByCond = function setPswpDataByCond(el, value) {
+  if (isStr(value)) setPswpData({
+    src: value
+  }, el);
+  if (isObj(value)) setPswpData(value, el);
+};
+var jsonEqual = function jsonEqual(val1, val2) {
+  return JSON.stringify(val1) === JSON.stringify(val2);
+};
+// CONCATENATED MODULE: ./src/config.ts
+
+var defualtGlobalOption = {
+  // in spa no need history mode
+  history: false,
+  shareEl: !isMobile(),
+  shareButtons: [{
+    id: 'download',
+    label: 'Download image',
+    url: '{{raw_image_url}}',
+    download: true
+  }]
+};
+var config_getGlobalMixin = function getGlobalMixin(pswp, options) {
+  return {
+    data: function data() {
+      return {
+        globalOptions: options
+      };
+    },
+    created: function created() {
+      // @ts-ignore
+      this.pswpElement = appendOnce(pswp.$el);
+    }
+  };
+};
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--13-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/photoswipe.vue?vue&type=script&lang=ts&
+function photoswipevue_type_script_lang_ts_typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { photoswipevue_type_script_lang_ts_typeof = function _typeof(obj) { return typeof obj; }; } else { photoswipevue_type_script_lang_ts_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return photoswipevue_type_script_lang_ts_typeof(obj); }
+
+function photoswipevue_type_script_lang_ts_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function photoswipevue_type_script_lang_ts_possibleConstructorReturn(self, call) { if (call && (photoswipevue_type_script_lang_ts_typeof(call) === "object" || typeof call === "function")) { return call; } return photoswipevue_type_script_lang_ts_assertThisInitialized(self); }
+
+function photoswipevue_type_script_lang_ts_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function photoswipevue_type_script_lang_ts_getPrototypeOf(o) { photoswipevue_type_script_lang_ts_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return photoswipevue_type_script_lang_ts_getPrototypeOf(o); }
+
+function photoswipevue_type_script_lang_ts_inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) photoswipevue_type_script_lang_ts_setPrototypeOf(subClass, superClass); }
+
+function photoswipevue_type_script_lang_ts_setPrototypeOf(o, p) { photoswipevue_type_script_lang_ts_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return photoswipevue_type_script_lang_ts_setPrototypeOf(o, p); }
+
+
+
+
+
 
 
 
@@ -6070,15 +6231,22 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 var photoswipevue_type_script_lang_ts_Photoswipe =
 /*#__PURE__*/
 function (_Vue) {
-  _inherits(Photoswipe, _Vue);
+  photoswipevue_type_script_lang_ts_inherits(Photoswipe, _Vue);
 
   function Photoswipe() {
-    _classCallCheck(this, Photoswipe);
+    photoswipevue_type_script_lang_ts_classCallCheck(this, Photoswipe);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Photoswipe).apply(this, arguments));
+    return photoswipevue_type_script_lang_ts_possibleConstructorReturn(this, photoswipevue_type_script_lang_ts_getPrototypeOf(Photoswipe).apply(this, arguments));
   }
 
   _createClass(Photoswipe, [{
+    key: "created",
+    value: function created() {
+      console.log('hello world');
+      var pswp = new external_commonjs_vue_commonjs2_vue_root_Vue_default.a(components_pswp).$mount();
+      this.pswpElement = appendOnce(pswp.$el);
+    }
+  }, {
     key: "getThumbEls",
     value: function getThumbEls() {
       return this.auto ? querySelectorList('img', this.gallery).filter(this.filter) : querySelectorList('[data-pswp-src]', this.gallery);
@@ -6300,101 +6468,6 @@ photoswipevue_type_script_lang_ts_Photoswipe = __decorate([vue_class_component_c
 // EXTERNAL MODULE: ./src/components/photoswipe.vue?vue&type=style&index=0&lang=css&
 var photoswipevue_type_style_index_0_lang_css_ = __webpack_require__("3dfa");
 
-// CONCATENATED MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-function normalizeComponent (
-  scriptExports,
-  render,
-  staticRenderFns,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier, /* server only */
-  shadowMode /* vue-cli only */
-) {
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (render) {
-    options.render = render
-    options.staticRenderFns = staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = 'data-v-' + scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
-      : injectStyles
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      var originalRender = options.render
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return originalRender(h, context)
-      }
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    }
-  }
-
-  return {
-    exports: scriptExports,
-    options: options
-  }
-}
-
 // CONCATENATED MODULE: ./src/components/photoswipe.vue
 
 
@@ -6404,7 +6477,7 @@ function normalizeComponent (
 
 /* normalize component */
 
-var component = normalizeComponent(
+var photoswipe_component = normalizeComponent(
   components_photoswipevue_type_script_lang_ts_,
   render,
   staticRenderFns,
@@ -6415,100 +6488,10 @@ var component = normalizeComponent(
   
 )
 
-/* harmony default export */ var components_photoswipe = (component.exports);
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"584e3ad4-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/pswp.vue?vue&type=template&id=76958fa8&
-var pswpvue_type_template_id_76958fa8_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _vm._m(0)}
-var pswpvue_type_template_id_76958fa8_staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"pswp",attrs:{"tabindex":"-1","role":"dialog","aria-hidden":"true"}},[_c('div',{staticClass:"pswp__bg"}),_c('div',{staticClass:"pswp__scroll-wrap"},[_c('div',{staticClass:"pswp__container"},[_c('div',{staticClass:"pswp__item"}),_c('div',{staticClass:"pswp__item"}),_c('div',{staticClass:"pswp__item"})]),_c('div',{staticClass:"pswp__ui pswp__ui--hidden"},[_c('div',{staticClass:"pswp__top-bar"},[_c('div',{staticClass:"pswp__counter"}),_c('button',{staticClass:"pswp__button pswp__button--close",attrs:{"title":"Close (Esc)"}}),_c('button',{staticClass:"pswp__button pswp__button--share",attrs:{"title":"Share"}}),_c('button',{staticClass:"pswp__button pswp__button--fs",attrs:{"title":"Toggle fullscreen"}}),_c('button',{staticClass:"pswp__button pswp__button--zoom",attrs:{"title":"Zoom in/out"}}),_c('div',{staticClass:"pswp__preloader"},[_c('div',{staticClass:"pswp__preloader__icn"},[_c('div',{staticClass:"pswp__preloader__cut"},[_c('div',{staticClass:"pswp__preloader__donut"})])])])]),_c('div',{staticClass:"pswp__share-modal pswp__share-modal--hidden pswp__single-tap"},[_c('div',{staticClass:"pswp__share-tooltip"})]),_c('button',{staticClass:"pswp__button pswp__button--arrow--left",attrs:{"title":"Previous (arrow left)"}}),_c('button',{staticClass:"pswp__button pswp__button--arrow--right",attrs:{"title":"Next (arrow right)"}}),_c('div',{staticClass:"pswp__caption"},[_c('div',{staticClass:"pswp__caption__center"})])])])])}]
-
-
-// CONCATENATED MODULE: ./src/components/pswp.vue?vue&type=template&id=76958fa8&
-
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/ts-loader??ref--13-3!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/pswp.vue?vue&type=script&lang=ts&
-function pswpvue_type_script_lang_ts_typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { pswpvue_type_script_lang_ts_typeof = function _typeof(obj) { return typeof obj; }; } else { pswpvue_type_script_lang_ts_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return pswpvue_type_script_lang_ts_typeof(obj); }
-
-function pswpvue_type_script_lang_ts_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function pswpvue_type_script_lang_ts_possibleConstructorReturn(self, call) { if (call && (pswpvue_type_script_lang_ts_typeof(call) === "object" || typeof call === "function")) { return call; } return pswpvue_type_script_lang_ts_assertThisInitialized(self); }
-
-function pswpvue_type_script_lang_ts_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function pswpvue_type_script_lang_ts_getPrototypeOf(o) { pswpvue_type_script_lang_ts_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return pswpvue_type_script_lang_ts_getPrototypeOf(o); }
-
-function pswpvue_type_script_lang_ts_inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) pswpvue_type_script_lang_ts_setPrototypeOf(subClass, superClass); }
-
-function pswpvue_type_script_lang_ts_setPrototypeOf(o, p) { pswpvue_type_script_lang_ts_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return pswpvue_type_script_lang_ts_setPrototypeOf(o, p); }
-
-
-
-
-var Pswp =
-/*#__PURE__*/
-function (_Vue) {
-  pswpvue_type_script_lang_ts_inherits(Pswp, _Vue);
-
-  function Pswp() {
-    pswpvue_type_script_lang_ts_classCallCheck(this, Pswp);
-
-    return pswpvue_type_script_lang_ts_possibleConstructorReturn(this, pswpvue_type_script_lang_ts_getPrototypeOf(Pswp).apply(this, arguments));
-  }
-
-  return Pswp;
-}(external_commonjs_vue_commonjs2_vue_root_Vue_default.a);
-
-Pswp = __decorate([vue_class_component_common_default()({
-  name: 'Pswp'
-})], Pswp);
-/* harmony default export */ var pswpvue_type_script_lang_ts_ = (Pswp);
-// CONCATENATED MODULE: ./src/components/pswp.vue?vue&type=script&lang=ts&
- /* harmony default export */ var components_pswpvue_type_script_lang_ts_ = (pswpvue_type_script_lang_ts_); 
-// CONCATENATED MODULE: ./src/components/pswp.vue
-
-
-
-
-
-/* normalize component */
-
-var pswp_component = normalizeComponent(
-  components_pswpvue_type_script_lang_ts_,
-  pswpvue_type_template_id_76958fa8_render,
-  pswpvue_type_template_id_76958fa8_staticRenderFns,
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* harmony default export */ var components_pswp = (pswp_component.exports);
+/* harmony default export */ var components_photoswipe = (photoswipe_component.exports);
 // CONCATENATED MODULE: ./src/main.ts
 
-
-
-
-
-var main_install = function install(Vue, options) {
-  var pswp = new Vue(components_pswp).$mount();
-  components_photoswipe.mixin(config_getGlobalMixin(pswp, options));
-  Vue.component('Photoswipe', components_photoswipe);
-  Vue.directive('pswp', {
-    bind: function bind(el, _ref) {
-      var value = _ref.value;
-      setPswpDataByCond(el, value);
-    },
-    update: function update(el, _ref2) {
-      var value = _ref2.value,
-          oldValue = _ref2.oldValue;
-      if (jsonEqual(value, oldValue)) return;
-      setPswpDataByCond(el, value);
-    }
-  });
-};
-
-/* harmony default export */ var main = ({
-  install: main_install,
-  Photoswipe: components_photoswipe
-});
+/* harmony default export */ var main = (components_photoswipe);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-service/lib/commands/build/entry-lib.js
 
 

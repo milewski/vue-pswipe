@@ -37,7 +37,7 @@
     "type": "git",
     "url": "https://github.com/GuoQichen/vue-pswipe.git"
   },
-  "main": "dist/Photoswipe.common.min.js",
+  "main": "dist/Photoswipe.common.js",
   "description": "a vue plugin for photoswipe",
   "author": "guoqichen"
 }
